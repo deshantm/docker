@@ -1,14 +1,20 @@
-FROM java:8-jdk
+FROM centos:centos7
 
-RUN apt-get update && apt-get install -y wget git curl zip && rm -rf /var/lib/apt/lists/*
+MAINTAINER tdeshane@excelsior.edu
+
+RUN yum update -y 
+
+RUN yum install -y java-1.8.0-openjdk
+
+RUN yum install -y wget git curl zip
 
 ENV JENKINS_HOME /var/jenkins_home
 ENV JENKINS_SLAVE_AGENT_PORT 50000
 
-# Jenkins is run with user `jenkins`, uid = 1000
+# Jenkins is run with user `jenkins`, uid = 1002
 # If you bind mount a volume from the host or a data container, 
 # ensure you use the same uid
-RUN useradd -d "$JENKINS_HOME" -u 1000 -m -s /bin/bash jenkins
+RUN useradd -d "$JENKINS_HOME" -u 1001 -m -s /bin/bash jenkins
 
 # Jenkins home directory is a volume, so configuration and build history 
 # can be persisted and survive image upgrades
